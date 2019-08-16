@@ -3,7 +3,7 @@ version: '3.7'
 services:
   java:
     tty: true # Enables debugging capabilities when attached to this container.
-    image: docker push meappy/jenkins-php-agent:latest
+    image: meappy/jenkins-php-agent:latest
     environment:
       - JAVA_HOME=${JAVA_HOME:-/opt/bitnami/java}
       - JENKINS_AGENT_WORKDIR=${JENKINS_AGENT_WORKDIR:-/var/jenkins}
