@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  java:
+    tty: true # Enables debugging capabilities when attached to this container.
+    image: app
+    environment:
+      - JAVA_HOME=${JAVA_HOME:-/opt/bitnami/java}
+      - JENKINS_AGENT_WORKDIR=${JENKINS_AGENT_WORKDIR:-/var/jenkins}
+      - JENKINS_AGENT=${JENKINS_AGENT:-/var/jenkins/slave.jar}
+      - JENKINS_SECRET=${JENKINS_SECRET}
+      - JENKINS_URL=${JENKINS_URL}
+      - JENKINS_AGENT_NAME=${JENKINS_AGENT_NAME}
+      - JNLP_PROTOCOL_OPTS=${JNLP_PROTOCOL_OPTS}
+    command: >
+      sh -c 'java -Duser.name=deploy ${JNLP_PROTOCOL_OPTS} \
+             -cp ${JENKINS_AGENT} hudson.remoting.jnlp.Main -headless \
+             -url ${JENKINS_URL} \
+             -workDir ${JENKINS_AGENT_WORKDIR} ${JENKINS_SECRET} \
+             ${JENKINS_AGENT_NAME}'
+    volumes:
+      - ${DATA_DIR:-/u01}:/u01
+    restart: always
