@@ -6,7 +6,7 @@ FROM bitnami/php-fpm:7.3 as php
 RUN apt-get -y update
 
 # Install git, ps, etc
-RUN apt-get install -y procps git curl
+RUN apt-get install -y procps git curl jq
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -34,6 +34,7 @@ ARG JENKINS_URL
 ARG JENKINS_AGENT_WORKDIR
 ARG JENKINS_SECRET
 ARG JENKINS_AGENT_NAME
+ARG JENKINS_SECRET_LIST
 
 # Jenkins builds at run time
 CMD if [ -z "${JENKINS_AGENT_NAME}" ]; then \
