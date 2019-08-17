@@ -26,3 +26,21 @@ ENV PATH="/opt/bitnami/java/bin:${PATH}"
 
 # Run container as deploy user not root
 USER deploy
+
+# for build
+ARG JNLP_PROTOCOL_OPTS
+ARG JENKINS_AGENT
+ARG JENKINS_URL
+ARG JENKINS_AGENT_WORKDIR
+ARG JENKINS_SECRET
+ARG JENKINS_AGENT_NAME
+
+# Jenkins builds at run time
+CMD if [ -z "${JENKINS_AGENT_NAME}" ]; then \
+      :; else \
+      java "${JNLP_PROTOCOL_OPTS}" \
+      -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
+      -url "${JENKINS_URL}" \
+      -workDir "${JENKINS_AGENT_WORKDIR}" "${JENKINS_SECRET}" \
+      "${JENKINS_AGENT_NAME}"
+    fi
