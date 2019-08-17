@@ -42,5 +42,5 @@ CMD if [ -z "${JENKINS_AGENT_NAME}" ]; then \
       -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
       -url "${JENKINS_URL}" \
       -workDir "${JENKINS_AGENT_WORKDIR}" "${JENKINS_SECRET}" \
-      "${JENKINS_AGENT_NAME}"
+      "${JENKINS_AGENT_NAME}"; \
     fi
