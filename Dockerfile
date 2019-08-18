@@ -21,14 +21,14 @@ ENV JENKINS_AGENT=${JENKINS_AGENT:-/usr/share/jenkins/slave.jar}
 RUN apt-get -y update
 
 # Install git, ps, etc
-RUN apt-get install -y procps git curl jq sudo
+RUN apt-get install -y procps git curl jq
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Add deploy group and user
 RUN groupadd -g 1002 deploy && \
-    useradd -u 1002 -g deploy -G sudo deploy
+    useradd -u 1002 -g deploy deploy
 
 # Create Jenkins dir
 RUN mkdir -p /usr/share/jenkins && \
