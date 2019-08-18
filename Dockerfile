@@ -43,7 +43,7 @@ USER deploy
 CMD export JENKINS_AGENT_NAME="$(echo ${JENKINS_AGENT_NAME} | cut -d . -f1)"; \
     export JENKINS_HOSTNAME="$(echo ${JENKINS_HOSTNAME} | cut -d . -f1)"; \
     # Download Jenkins slave agent 
-    curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar; \
+    curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar \
     https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar && \
     chmod 755 /usr/share/jenkins && \
     chmod 644 /usr/share/jenkins/slave.jar; \
