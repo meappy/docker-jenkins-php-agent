@@ -35,8 +35,14 @@ ARG JENKINS_AGENT_WORKDIR
 ARG JENKINS_SECRET
 ARG JENKINS_AGENT_NAME
 ARG JENKINS_SECRET_LIST
+ARG HOSTNAME
 
-# Jenkins builds at run time
+CMD if [ -z "${JENKINS_SECRET}" ]; then \
+      JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${HOSTNAME})"; else \
+      :; \
+    fi
+
+# Jenkins at run time only when variable is present
 CMD if [ -z "${JENKINS_AGENT_NAME}" ]; then \
       :; else \
       java "${JNLP_PROTOCOL_OPTS}" \
