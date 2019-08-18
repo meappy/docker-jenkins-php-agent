@@ -6,11 +6,14 @@ services:
     image: meappy/jenkins-php-agent:latest
     environment:
       - JAVA_HOME=${JAVA_HOME:-/opt/bitnami/java}
-      - JENKINS_AGENT_WORKDIR=${JENKINS_AGENT_WORKDIR:-/var/jenkins}
-      - JENKINS_AGENT=${JENKINS_AGENT:-/var/jenkins/slave.jar}
-      - JENKINS_SECRET=${JENKINS_SECRET}
-      - JENKINS_URL=${JENKINS_URL}
+      - JENKINS_AGENT=${JENKINS_AGENT:-/usr/share/jenkins/slave.jar}
       - JENKINS_AGENT_NAME=${JENKINS_AGENT_NAME}
+      - JENKINS_AGENT_VERSION=${JENKINS_AGENT_VERSION:-3.29}
+      - JENKINS_AGENT_WORKDIR=${JENKINS_AGENT_WORKDIR:-/var/jenkins}
+      - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
+      - JENKINS_SECRET=${JENKINS_SECRET}
+      - JENKINS_SECRET_LIST=${JENKINS_SECRET_LIST}
+      - JENKINS_URL=${JENKINS_URL}
       - JNLP_PROTOCOL_OPTS=${JNLP_PROTOCOL_OPTS}
     command: >
       sh -c 'java -Duser.name=deploy ${JNLP_PROTOCOL_OPTS} \
