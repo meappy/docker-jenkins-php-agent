@@ -21,7 +21,7 @@ ENV JENKINS_AGENT=${JENKINS_AGENT:-/usr/share/jenkins/slave.jar}
 RUN apt-get -y update
 
 # Install git, ps, etc
-RUN apt-get install -y procps git curl jq
+RUN apt-get install -y procps git curl jq sudo
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
