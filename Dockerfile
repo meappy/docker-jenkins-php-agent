@@ -28,10 +28,11 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Add deploy group and user
 RUN groupadd -g 1002 deploy && \
-    useradd -u 1002 -g 1002 deploy
+    useradd -u 1002 -g deploy -G sudo deploy
 
 # Create Jenkins dir
-RUN mkdir -p /usr/share/jenkins
+RUN mkdir -p /usr/share/jenkins && \
+    chown deploy:deploy /usr/share/jenkins
 
 # Merge Docker images
 COPY --from=java /opt/bitnami /opt/bitnami
