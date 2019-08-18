@@ -16,6 +16,9 @@ ARG JENKINS_HOSTNAME
 # ENV substitution
 ENV JENKINS_AGENT_VERSION=${JENKINS_AGENT_VERSION:-3.29}
 
+# Add Debian Backports
+RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
+
 # Update
 RUN apt-get -y update
 
@@ -31,7 +34,6 @@ RUN groupadd -g 1002 deploy && \
     useradd -u 1002 -g 1002 deploy
 
 # Download Jenkins slave agent 
-RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
 RUN curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar \
     https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar \
     && chmod 755 /usr/share/jenkins \
