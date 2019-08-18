@@ -27,7 +27,7 @@ ENV PATH="/opt/bitnami/java/bin:${PATH}"
 # Run container as deploy user not root
 USER deploy
 
-# for build
+# Arguments for build
 ARG JNLP_PROTOCOL_OPTS
 ARG JENKINS_AGENT
 ARG JENKINS_URL
@@ -37,8 +37,12 @@ ARG JENKINS_AGENT_NAME
 ARG JENKINS_SECRET_LIST
 ARG HOSTNAME
 
+# Build JENKINS_SECRET
 CMD if [ -z "${JENKINS_SECRET}" ]; then \
-      JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${HOSTNAME})"; else \
+      if [ -z "${JENKINS_SECRET_LIST}" ]; then \
+        :; else \
+        JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${HOSTNAME})"; \
+      fi; else \
       :; \
     fi
 
