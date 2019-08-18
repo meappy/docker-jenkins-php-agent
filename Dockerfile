@@ -35,13 +35,13 @@ ARG JENKINS_AGENT_WORKDIR
 ARG JENKINS_SECRET
 ARG JENKINS_AGENT_NAME
 ARG JENKINS_SECRET_LIST
-ARG HOSTNAME
+ARG JENKINS_HOSTNAME
 
 # Build JENKINS_SECRET then run Jenkins
 CMD if [ -z "${JENKINS_SECRET}" ]; then \
       if [ -z "${JENKINS_SECRET_LIST}" ]; then \
         :; else \
-        JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${HOSTNAME})"; \
+        JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${JENKINS_HOSTNAME})"; \
         java "${JNLP_PROTOCOL_OPTS}" \
         -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
         -url "${JENKINS_URL}" \
