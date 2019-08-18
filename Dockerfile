@@ -16,15 +16,11 @@ ARG JENKINS_HOSTNAME
 # ENV substitution
 ENV JENKINS_AGENT_VERSION=${JENKINS_AGENT_VERSION:-3.29}
 
-# Add Debian Backports
-RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
-
 # Update
 RUN apt-get -y update
 
 # Install git, ps, etc
-RUN apt-get install -y stretch-backports git-lfs \
-    procps git curl jq
+RUN apt-get install -y procps git curl jq
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
