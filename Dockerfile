@@ -37,21 +37,16 @@ ARG JENKINS_AGENT_NAME
 ARG JENKINS_SECRET_LIST
 ARG HOSTNAME
 
-# Build JENKINS_SECRET
+# Build JENKINS_SECRET then run Jenkins
 CMD if [ -z "${JENKINS_SECRET}" ]; then \
       if [ -z "${JENKINS_SECRET_LIST}" ]; then \
         :; else \
         JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${HOSTNAME})"; \
+        java "${JNLP_PROTOCOL_OPTS}" \
+        -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
+        -url "${JENKINS_URL}" \
+        -workDir "${JENKINS_AGENT_WORKDIR}" "${JENKINS_SECRET}" \
+        "${JENKINS_AGENT_NAME}"; \
       fi; else \
       :; \
-    fi
-
-# Jenkins at run time only when variable is present
-CMD if [ -z "${JENKINS_AGENT_NAME}" ]; then \
-      :; else \
-      java "${JNLP_PROTOCOL_OPTS}" \
-      -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
-      -url "${JENKINS_URL}" \
-      -workDir "${JENKINS_AGENT_WORKDIR}" "${JENKINS_SECRET}" \
-      "${JENKINS_AGENT_NAME}"; \
     fi
