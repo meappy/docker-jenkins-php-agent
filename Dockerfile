@@ -38,10 +38,12 @@ ARG JENKINS_SECRET_LIST
 ARG JENKINS_HOSTNAME
 
 # Build JENKINS_SECRET then run Jenkins
-CMD if [ -z "${JENKINS_SECRET}" ]; then \
+CMD export JENKINS_AGENT_NAME="$(echo ${JENKINS_AGENT_NAME} | cut -d . -f1)"; \
+    export JENKINS_HOSTNAME="$(echo ${JENKINS_HOSTNAME} | cut -d . -f1)"; \
+    if [ -z "${JENKINS_SECRET}" ]; then \
       if [ -z "${JENKINS_SECRET_LIST}" ]; then \
         :; else \
-        JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${JENKINS_HOSTNAME})"; \
+        export JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${JENKINS_HOSTNAME})"; \
       fi; else \
       :; \
     fi; \
