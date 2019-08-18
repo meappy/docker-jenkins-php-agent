@@ -38,15 +38,20 @@ ARG JENKINS_SECRET_LIST
 ARG JENKINS_HOSTNAME
 
 # Build JENKINS_SECRET then run Jenkins
-CMD if [ -z "${JENKINS_SECRET}" ]; then \
+CMD export JENKINS_AGENT_NAME="$(echo ${JENKINS_AGENT_NAME} | cut -d . -f1)"; \
+    export JENKINS_HOSTNAME="$(echo ${JENKINS_HOSTNAME} | cut -d . -f1)"; \
+    if [ -z "${JENKINS_SECRET}" ]; then \
       if [ -z "${JENKINS_SECRET_LIST}" ]; then \
         :; else \
-        JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${JENKINS_HOSTNAME})"; \
-        java "${JNLP_PROTOCOL_OPTS}" \
-        -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
-        -url "${JENKINS_URL}" \
-        -workDir "${JENKINS_AGENT_WORKDIR}" "${JENKINS_SECRET}" \
-        "${JENKINS_AGENT_NAME}"; \
+        export JENKINS_SECRET="$(echo ${JENKINS_SECRET_LIST} | jq -r .${JENKINS_HOSTNAME})"; \
       fi; else \
       :; \
+    fi; \
+    if [ -z "${JENKINS_AGENT_NAME}" ]; then \
+      :; else \
+      java "${JNLP_PROTOCOL_OPTS}" \
+      -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
+      -url "${JENKINS_URL}" \
+      -workDir "${JENKINS_AGENT_WORKDIR}" "${JENKINS_SECRET}" \
+      "${JENKINS_AGENT_NAME}"; \
     fi

@@ -21,6 +21,7 @@ $ cp .env-example .env
 docker-compose up -d
 ```
 
-## References
+## References/Credits
 - [Bitnami Java Docker Image](https://bit.ly/2Zcxn5u)
 - [Jenkins JNLP Agent Docker image](https://dockr.ly/2NaXQOf)
+- [Jenkins Agent Docker image](https://bit.ly/2NcfSzD)

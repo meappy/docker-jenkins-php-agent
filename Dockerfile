@@ -2,11 +2,26 @@ FROM bitnami/java:1.8 as java
 
 FROM bitnami/php-fpm:7.3 as php
 
+# Arguments for build
+ARG JNLP_PROTOCOL_OPTS
+ARG JENKINS_AGENT
+ARG JENKINS_URL
+ARG JENKINS_AGENT_WORKDIR
+ARG JENKINS_SECRET
+ARG JENKINS_AGENT_NAME
+ARG JENKINS_AGENT_VERSION
+ARG JENKINS_SECRET_LIST
+ARG JENKINS_HOSTNAME
+
+# ENV substitution
+ENV JENKINS_AGENT_VERSION=${JENKINS_AGENT_VERSION:-3.29}
+
 # Update
 RUN apt-get -y update
 
 # Install git, ps, etc
-RUN apt-get install -y procps git curl jq
+RUN apt-get install -y stretch-backports git-lfs \
+    procps git curl jq
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -15,27 +30,21 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 RUN groupadd -g 1002 deploy && \
     useradd -u 1002 -g 1002 deploy
 
-# Copy Jenkins slave agent
-RUN mkdir -p /usr/share/jenkins
-COPY ./slave.jar /usr/share/jenkins
+# Download Jenkins slave agent 
+RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
+RUN curl --create-dirs -fsSLo /usr/share/jenkins/slave.jar \
+    https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_AGENT_VERSION}/remoting-${JENKINS_AGENT_VERSION}.jar \
+    && chmod 755 /usr/share/jenkins \
+    && chmod 644 /usr/share/jenkins/slave.jar
 
-# Merge images
+# Merge Docker images
 COPY --from=java /opt/bitnami /opt/bitnami
 
+# Add java path
 ENV PATH="/opt/bitnami/java/bin:${PATH}"
 
 # Run container as deploy user (will use jenkins user TODO)
 USER deploy
-
-# Arguments for build
-ARG JNLP_PROTOCOL_OPTS
-ARG JENKINS_AGENT
-ARG JENKINS_URL
-ARG JENKINS_AGENT_WORKDIR
-ARG JENKINS_SECRET
-ARG JENKINS_AGENT_NAME
-ARG JENKINS_SECRET_LIST
-ARG JENKINS_HOSTNAME
 
 # Build JENKINS_SECRET then run Jenkins
 CMD export JENKINS_AGENT_NAME="$(echo ${JENKINS_AGENT_NAME} | cut -d . -f1)"; \
