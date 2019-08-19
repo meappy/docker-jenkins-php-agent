@@ -15,11 +15,7 @@ services:
       - JENKINS_URL=${JENKINS_URL}
       - JNLP_PROTOCOL_OPTS=${JNLP_PROTOCOL_OPTS}
     deploy:
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.hostname == mcffppweb41.unix.local
+      mode: global
     volumes:
       - ${DATA_DIR:-/u01}:/u01
     restart: always
