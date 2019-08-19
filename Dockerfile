@@ -43,6 +43,9 @@ ENV PATH="/opt/bitnami/java/bin:${PATH}"
 # Run container as deploy user (will use jenkins user TODO)
 USER deploy
 
+# Set umask
+ENTRYPOINT umask 0002
+
 # Build JENKINS_SECRET then run Jenkins
 CMD export JENKINS_AGENT_NAME="$(echo ${JENKINS_AGENT_NAME} | cut -d . -f1)"; \
     export JENKINS_HOSTNAME="$(echo ${JENKINS_HOSTNAME} | cut -d . -f1)"; \
