@@ -40,11 +40,16 @@ COPY --from=java /opt/bitnami /opt/bitnami
 # Add java path
 ENV PATH="/opt/bitnami/java/bin:${PATH}"
 
+# Set umask
+COPY ./entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Because "WorkingDir" is set to /app, make deploy user own it
+RUN chown -R deploy:deploy /app
+
 # Run container as deploy user (will use jenkins user TODO)
 USER deploy
-
-# Set umask
-ENTRYPOINT umask 0002
 
 # Build JENKINS_SECRET then run Jenkins
 CMD export JENKINS_AGENT_NAME="$(echo ${JENKINS_AGENT_NAME} | cut -d . -f1)"; \
