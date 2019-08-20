@@ -65,7 +65,7 @@ CMD export JENKINS_AGENT_NAME="$(echo ${JENKINS_AGENT_NAME} | cut -d . -f1)"; \
     fi; \
     if [ -z "${JENKINS_AGENT_NAME}" ]; then \
       :; else \
-      java "${JNLP_PROTOCOL_OPTS}" \
+      java "${JAVA_OPTS}" "${JNLP_PROTOCOL_OPTS}" \
       -cp "${JENKINS_AGENT}" hudson.remoting.jnlp.Main -headless \
       -url "${JENKINS_URL}" \
       -workDir "${JENKINS_AGENT_WORKDIR}" "${JENKINS_SECRET}" \

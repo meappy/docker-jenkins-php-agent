@@ -5,6 +5,7 @@ services:
     image: meappy/jenkins-php-agent:latest
     environment:
       - JAVA_HOME=${JAVA_HOME:-/opt/bitnami/java}
+      - JAVA_OPTS=${JAVA_OPTS}
       - JENKINS_AGENT=${JENKINS_AGENT:-/usr/share/jenkins/slave.jar}
       - JENKINS_AGENT_NAME=${JENKINS_AGENT_NAME}
       - JENKINS_AGENT_VERSION=${JENKINS_AGENT_VERSION:-3.29}
