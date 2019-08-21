@@ -26,13 +26,18 @@ services:
     image: 'bitnami/jenkins:2'
     ports:
       - "8080:8080"
-      - "8443:8443"
     deploy:
       mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.hostname == ${JENKINS_MASTER_NODE}
+    environment:
+      - JENKINS_USERNAME=${JENKINS_USERNAME:-jenkins}
+      - JENKINS_PASSWORD=${JENKINS_PASSWORD:-SWNUVzJ5RjhQY3dFNUozVUUrMjdqYm9I}
+      - JENKINS_HOME=${JENKINS_HOME:-/opt/bitnami/jenkins/jenkins_home}
+      - DISABLE_JENKINS_INITIALIZATION=${DISABLE_JENKINS_INITIALIZATION:-no}
+      - JAVA_OPTS=${JAVA_OPTS}
     volumes:
       - ${JENKINS_MASTER_DATADIR:-/var/jenkins/jenkins-master-data}:/bitnami
     networks:
