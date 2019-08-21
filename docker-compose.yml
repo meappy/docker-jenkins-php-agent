@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  java:
+  slave:
     image: meappy/jenkins-php-agent:latest
     environment:
       - JAVA_HOME=${JAVA_HOME:-/opt/bitnami/java}
@@ -18,5 +18,28 @@ services:
     deploy:
       mode: global
     volumes:
-      - ${DATA_DIR:-/u01}:/u01
-    restart: always
+      - ${DATADIR:-./jenkins}:${DATADIR}
+    networks:
+      - jenkins-privnet
+
+  master:
+    image: 'bitnami/jenkins:2'
+    ports:
+      - "8080:8080"
+      - "8080:8080"
+      - "8443:8443"
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.hostname == ${JENKINS_MASTER_NODE}
+    volumes:
+      - ${JENKINS_MASTER_DATADIR:-/var/jenkins/jenkins-master-data}:/bitnami
+    networks:
+      - jenkins-privnet
+
+networks:
+  jenkins-privnet:
+    driver: overlay
+    external: true
