@@ -26,7 +26,6 @@ services:
     image: 'bitnami/jenkins:2'
     ports:
       - "8080:8080"
-      - "8080:8080"
       - "8443:8443"
     deploy:
       mode: replicated
